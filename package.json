@@ -1,0 +1,26 @@
+{
+  "name": "mongoose-blog-api-paton-william",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinkful-c11/mongoose-blog-api-paton-william.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thinkful-c11/mongoose-blog-api-paton-william/issues"
+  },
+  "homepage": "https://github.com/thinkful-c11/mongoose-blog-api-paton-william#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.4",
+    "nodemon": "^1.11.0"
+  }
+}
