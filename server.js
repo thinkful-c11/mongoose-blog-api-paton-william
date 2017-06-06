@@ -20,20 +20,27 @@ app.get('/posts', (req, res) => {
       res.json({blogs: blogs.map(
         (blog)=> blog.apiRepr()
       )});
-    });
-});
+    })
+    .catch(
+      err => {
+        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+      }
+    );
 
 app.get('/posts/:id', (req,res) => {
   Blog
     .findById(req.params.id)
     .then(blog=>{
       res.json(blog.apiRepr());
-    });
+    })
+     .catch(
+       err => {
+        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+      }
+    );
 });
 
-app.post('/posts', (req,res)=> {
-
-  console.log(req.body);
+app.post('/posts', (req,res) => {
 
   const required = ['title','content','author'];
 
@@ -57,10 +64,53 @@ app.post('/posts', (req,res)=> {
       blog=>{
         res.status(201).json(blog.apiRepr());
       }
+    )
+    .catch(
+      err => {
+        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+      }
     );
 });
 
+app.put('/posts/:id', (req, res) => {
 
+  const toUpdate = {};
+  const updatedFields = ['title', 'content', 'author'];
+
+  updatedFields.forEach(field => {
+    if (field in req.body) {
+        toUpdate[field] = req.body[field];
+      }
+  });
+
+    Blog
+        .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+        .then(
+          blog => {
+            res.status(200).json(blog.apiRepr());
+          }
+        )
+        .catch(
+          err => {
+            res.status(500).json({message: 'Internal server error, "Our Bad"'})
+          }
+        );
+});
+
+app.delete('/posts/:id', (req, res) => {
+    Blog
+        .findByIdAndRemove(req.params.id)
+        .then(
+          blog => {
+            res.status(204).end();
+          }
+        )
+        .catch(
+          err => {
+            res.status(500).json({message: 'Internal server error, "Our Bad"'})
+          }
+        );
+});
 
 let server;
 
@@ -86,14 +136,14 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
 function closeServer() {
   return mongoose.disconnect().then(() => {
     return new Promise((resolve, reject) => {
-       console.log('Closing server');
-       server.close(err => {
-         if (err) {
-             return reject(err);
-           }
-         resolve();
-       });
-     });
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+           return reject(err);
+         }
+        resolve();
+      });
+    });
   });
 }
 
