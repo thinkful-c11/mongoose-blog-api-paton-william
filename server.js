@@ -16,27 +16,29 @@ app.get('/posts', (req, res) => {
   Blog
     .find({})
     .then(blogs=> {
-      console.log(blogs);
       res.json({blogs: blogs.map(
         (blog)=> blog.apiRepr()
       )});
     })
     .catch(
-      err => {
-        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+      () => {
+        res.status(500).json({message: 'Internal server error, "Our Bad"'});
       }
     );
+});
 
 app.get('/posts/:id', (req,res) => {
   Blog
     .findById(req.params.id)
-    .then(blog=>{
-      res.json(blog.apiRepr());
-    })
-     .catch(
-       err => {
-        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+    .then(
+      blog=> {
+        res.json(blog.apiRepr());
       }
+    )
+     .catch(
+       () => {
+         res.status(500).json({message: 'Internal server error, "Our Bad"'});
+       }
     );
 });
 
@@ -66,8 +68,8 @@ app.post('/posts', (req,res) => {
       }
     )
     .catch(
-      err => {
-        res.status(500).json({message: 'Internal server error, "Our Bad"'})
+      () => {
+        res.status(500).json({message: 'Internal server error, "Our Bad"'});
       }
     );
 });
@@ -79,11 +81,11 @@ app.put('/posts/:id', (req, res) => {
 
   updatedFields.forEach(field => {
     if (field in req.body) {
-        toUpdate[field] = req.body[field];
-      }
+      toUpdate[field] = req.body[field];
+    }
   });
 
-    Blog
+  Blog
         .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
         .then(
           blog => {
@@ -91,23 +93,23 @@ app.put('/posts/:id', (req, res) => {
           }
         )
         .catch(
-          err => {
-            res.status(500).json({message: 'Internal server error, "Our Bad"'})
+          () => {
+            res.status(500).json({message: 'Internal server error, "Our Bad"'});
           }
         );
 });
 
 app.delete('/posts/:id', (req, res) => {
-    Blog
+  Blog
         .findByIdAndRemove(req.params.id)
         .then(
-          blog => {
+          () => {
             res.status(204).end();
           }
         )
         .catch(
-          err => {
-            res.status(500).json({message: 'Internal server error, "Our Bad"'})
+          () => {
+            res.status(500).json({message: 'Internal server error, "Our Bad"'});
           }
         );
 });
@@ -139,8 +141,8 @@ function closeServer() {
       console.log('Closing server');
       server.close(err => {
         if (err) {
-           return reject(err);
-         }
+          return reject(err);
+        }
         resolve();
       });
     });
@@ -149,4 +151,4 @@ function closeServer() {
 
 if (require.main === module) {
   runServer().catch(err => console.error(err));
-};
+}
